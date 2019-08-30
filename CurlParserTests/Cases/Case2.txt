@@ -1,0 +1,7 @@
+﻿curl --location --request GET "https://api.paystack.co/transaction" \
+  --header "Authorization: Bearer SECRET_KEY"
+#####
+HEADER: Authorization: Bearer SECRET_KEY
+METHOD: GET
+URL: https://api.paystack.co/transaction
+LOCATION:
