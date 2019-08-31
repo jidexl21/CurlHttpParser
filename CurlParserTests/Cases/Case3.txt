@@ -7,5 +7,6 @@
 ##########
 METHOD: POST
 HEADER: apikey: somerandomuniquekey
+HEADER: cache-control: no-cache
 HEADER: content-type: application/x-www-form-urlencoded
 DATA: userId=user&password=userpass&senderId=SMSGAT&sendMethod=simpleMsg&msgType=text&mobile=9199999999999&msg=This%20is%20my%20first%20message%20with%20SMSGateway.Center&duplicateCheck=true&format=json&scheduleTime=2017-06-13%2020%3A22%3A00

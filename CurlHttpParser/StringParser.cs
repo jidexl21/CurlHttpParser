@@ -10,11 +10,26 @@ namespace CurlHttpParser
     public class StringParser
     {
 
-        public HttpRequest CreateHttpRequest(string RequestString) {
+        public HttpRequestMessage CreateHttpRequest(string RequestString) {
+            string contentType = "";
             var details = Parse(RequestString);
             var request = new HttpRequestMessage(new HttpMethod(details.Method), details.URL);
-            foreach (var hdr in details.Headers) {
+            foreach (string hdr in details.Headers) {
+                var res = hdr.Split(':');
+                string section = res[0].Trim();
+                switch (section.ToLower()) {
+                    case "authorization":
+                        request.Headers.TryAddWithoutValidation("Authorization", res[1].Trim());
+                        break;
+                    case "content-type":
+                        contentType = res[1].Trim(); 
+                        break; 
+                }
+              
+                var data = (details.Data.Count > 0)? details.Data[0]:"";
+                new StringContent((string) data, Encoding.UTF8, contentType);
 
+                //request.Headers
             }
             foreach (var content in details.Data) {
                 request.Content = new StringContent((string) content, Encoding.UTF8);
@@ -42,7 +57,7 @@ namespace CurlHttpParser
                     continue;
                 };
                 string key = item.Substring(0, delimiter).Trim(new char[] { '-'});
-                string value = item.Substring(delimiter).Trim();
+                string value = item.Substring(delimiter).Trim().Trim(new char[] { '\'', '"'});
                 switch (key.ToLower()) {
                     case "header":
                     case "h":

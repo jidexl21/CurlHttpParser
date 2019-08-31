@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Web;
 
@@ -14,6 +16,12 @@ namespace CurlHttpParser
             sb.Append(HttpUtility.UrlEncode(name));
             sb.Append("=");
             sb.Append(HttpUtility.UrlEncode(value));
+        }
+
+        public static HttpRequestMessage FromCurlString(this HttpRequest sb, string requestString)
+        {
+            StringParser parser = new StringParser();
+            return parser.CreateHttpRequest(requestString);
         }
     }
 }
