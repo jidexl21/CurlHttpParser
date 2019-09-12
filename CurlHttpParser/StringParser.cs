@@ -11,10 +11,17 @@ namespace CurlHttpParser
     {
 
         public HttpRequestMessage CreateHttpRequest(string RequestString) {
-            string contentType = "";
-            var details = Parse(RequestString);
-            var request = new HttpRequestMessage(new HttpMethod(details.Method), details.URL);
-            foreach (string hdr in details.Headers) {
+            string contentType = "text/plain";
+            ExtractedParams details = Parse(RequestString);
+            var request = new HttpRequestMessage();
+            request.Method = new HttpMethod(details.Method);
+            request.RequestUri = new Uri(details.URL);
+
+            var hdrs = details.Headers.ToArray();
+            foreach(var hd in hdrs) {
+                if (hd.GetType() != typeof(string)) continue;
+                string hdr = (string)hd;
+                if (hdr == "") { continue; }
                 var res = hdr.Split(':');
                 string section = res[0].Trim();
                 switch (section.ToLower()) {
@@ -25,22 +32,21 @@ namespace CurlHttpParser
                         contentType = res[1].Trim(); 
                         break; 
                 }
-              
-                var data = (details.Data.Count > 0)? details.Data[0]:"";
-                new StringContent((string) data, Encoding.UTF8, contentType);
-
-                //request.Headers
             }
             foreach (var content in details.Data) {
-                request.Content = new StringContent((string) content, Encoding.UTF8);
+                string cnt = (string) content;
+                cnt = cnt.Replace("\\\"", "\"");
+                request.Content = new StringContent(cnt, Encoding.UTF8, contentType);
             }
             return request;
         }
 
         public ExtractedParams Parse(string RequestString)
         {
+
             RequestString = RequestString.Replace("\\\r\n", "").Replace("\r\n", "").Replace("\n", "");
             ExtractedParams p = new ExtractedParams();
+            p.RawCurl = RequestString; 
             bool hasPostData = false;
             StringBuilder postData = new StringBuilder();
 

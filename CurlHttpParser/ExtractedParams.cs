@@ -10,6 +10,7 @@ namespace CurlHttpParser
         public string URL { get; set; }
         public List<object> Headers { get; set; } = new List<object>();
         public List<object> Data { get; set; } = new List<object>(); 
+        public string RawCurl { get; set; }
 
     }
 }

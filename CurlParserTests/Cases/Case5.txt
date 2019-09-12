@@ -1,4 +1,0 @@
-﻿
-curl --url 'smtps://smtp.gmail.com:465' --ssl-reqd \
-  --mail-from 'username@gmail.com' --mail-rcpt 'john@example.com' \
-  --upload-file mail.txt --user 'username@gmail.com:password' --insecure
