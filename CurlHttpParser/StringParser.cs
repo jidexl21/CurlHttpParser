@@ -34,7 +34,7 @@ namespace CurlHttpParser
             foreach (var content in details.Data) {
                 request.Content = new StringContent((string) content, Encoding.UTF8);
             }
-            return null;
+            return request;
         }
 
         public ExtractedParams Parse(string RequestString)
