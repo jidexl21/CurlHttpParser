@@ -1,6 +1,8 @@
 ﻿curl -X PUT http://localhost:19518/api/branches/systemenable/testtoken -d {\"institutionID\":2,\"Code\":\"901\"} -H "Content-Type: application/json"
 
 ########################
+URL: http://localhost:19518/api/branches/systemenable/testtoken
 METHOD: PUT
-HEADER: content-type: application/json
+HEADER: 
+ - 'content-type: application/json'
 DATA: {\"institutionID\":2,\"Code\":\"901\"} 

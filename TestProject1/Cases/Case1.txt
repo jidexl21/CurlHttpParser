@@ -7,6 +7,7 @@
 ######################
 URL: https://api.paystack.co/transaction/initialize
 METHOD: POST
-HEADER: Authorization: Bearer SECRET_KEY
-HEADER: Content-Type: application/json
+HEADER: 
+  - 'Authorization: Bearer SECRET_KEY'
+  - 'Content-Type: application/json'
 DATA: {"reference": "7PVGX8MEk85tgeEpVDtD", "amount": 500000, "email": "customer@email.com"}

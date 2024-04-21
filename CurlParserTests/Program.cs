@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using CurlHttpParser;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json; 
+
 
 namespace CurlParserTests
 {
