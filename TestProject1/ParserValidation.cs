@@ -9,7 +9,6 @@ using System.Text;
 using Xunit;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization;
-using YamlDotNet.Core.Tokens;
 
 namespace CurlHttpParserTests
 {
