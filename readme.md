@@ -13,8 +13,11 @@ sample curl string:
 
 load curl string into a string variable and execute request.
 ### Code
-            import CurlHttpParser; 
-            
+            ...
+            using CurlHttpParser;
+            ...
+           
+
             StringParser parser = new StringParser();
             var message = parser.CreateHttpRequest(requestString);
             
