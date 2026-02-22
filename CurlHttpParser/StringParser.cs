@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -43,7 +44,7 @@ namespace CurlHttpParser
 
         public ExtractedParams Parse(string RequestString)
         {
-
+            const string pattern = @"(http|smtp|https):\/\/([\w,.,\/,-?=])*";
             RequestString = RequestString.Replace("\\\r\n", "").Replace("\r\n", "").Replace("\n", "");
             ExtractedParams p = new ExtractedParams();
             p.RawCurl = RequestString; 
@@ -51,7 +52,8 @@ namespace CurlHttpParser
             StringBuilder postData = new StringBuilder();
 
             List<Dictionary<string, string>> x = new List<Dictionary<string, string>>();
-            string[] options = RequestString.Split(new string[] { " --", " -" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] options = RequestString.Split(new string[] { " --", " -" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x=>x.TrimEnd('\\',' ')).ToArray();
 
             foreach (string item in options) {
                 bool matchd = false; 
@@ -59,12 +61,14 @@ namespace CurlHttpParser
                 Dictionary<string, string> itm = new Dictionary<string, string>();
                 string trimmed = item.Trim(new char[] { '\'', ' ' });
                 if (delimiter <= 0) {
-                    if (trimmed.IndexOf("http") != 0) { p.URL = trimmed; continue;}
+                    if (trimmed.IndexOf("http") != -1) { p.URL = trimmed; continue;}
                     continue;
                 };
                 string key = item.Substring(0, delimiter).Trim(new char[] { '-'});
                 string value = item.Substring(delimiter).Trim().Trim(new char[] { '\'', '"'});
                 switch (key.ToLower()) {
+                    case "compressed":
+                        break;
                     case "header":
                     case "h":
                         p.Headers.Add(value); matchd = true;
@@ -79,7 +83,11 @@ namespace CurlHttpParser
                     case "request":
                     case "x":
                         int notClean = value.IndexOf(" ");
+                        var urlIndex = value.IndexOf("http");
                         p.Method = (notClean == -1) ? value : value.Substring(0,notClean); matchd = true;
+                        if (urlIndex != -1) { 
+                            p.URL = value.Substring(urlIndex);
+                        }
                         break;
                     case "f":
                         string[] kv = value.Split("=");
@@ -95,20 +103,33 @@ namespace CurlHttpParser
                         break;
                 };
                 if (!matchd) {
-                    if (trimmed.IndexOf("http") != -1) { p.URL = trimmed.Substring(trimmed.IndexOf("http")); continue; }                   
+                    if (trimmed.IndexOf("http") != -1) {
+                        p.URL = trimmed.Substring(trimmed.IndexOf("http")); 
+                        continue; 
+                    }
+                    var other = trimmed.Split(" ");
+                    if (other[0].ToLower() == "curl" && other.Length > 1)
+                    {
+                        p.URL = other[1];
+                        continue;
+                    }
+
+                    Regex rg = new Regex(pattern);
+                    if (string.IsNullOrEmpty(p.URL))
+                    {
+                        MatchCollection found = rg.Matches(trimmed);
+                        if (found.Count > 0) { p.URL = found[0].Value; }
+                        if (!rg.IsMatch(p.URL)) { p.URL = ""; }
+                    }
                 }
-                string pattern = @"(http|smtp|https):\/\/([\w,.,\/,-?=])*";
-                Regex rg = new Regex(pattern);
-                if (!rg.IsMatch(p.URL)) { p.URL = ""; }
-                if (string.IsNullOrEmpty(p.URL))
-                {
-                    MatchCollection found = rg.Matches(trimmed);
-                    if (found.Count > 0) { p.URL = found[0].Value; }
-                }
-            };
+            }
+            ;
 
             if (hasPostData){
                 p.Data.Add(postData.ToString());
+            }
+            if (string.IsNullOrEmpty(p.Method)) { 
+                p.Method = "GET";
             }
            
             //return x;

@@ -20,7 +20,7 @@ namespace CurlHttpParserTests
         private static Dictionary<string, (string,string)> Cases;
 
         private static string[] Verbs = {
-           "POST","GET","PUT","PATCH","DELETE"
+           "POST","GET","PUT","PATCH","DELETE", "HEAD", "OPTIONS", "TRACE", "CONNECT"
         };
 
         static ParserValidation()
@@ -39,6 +39,7 @@ namespace CurlHttpParserTests
         [InlineData("Case3.txt")]
         [InlineData("Case4.txt")]
         [InlineData("Case7.txt")]
+        [InlineData("Case8.txt")]
         public void CheckMethod(string file)
         {
             var (given, expected) = Cases[file];
@@ -55,6 +56,7 @@ namespace CurlHttpParserTests
         [InlineData("Case3.txt")]
         [InlineData("Case4.txt")]
         [InlineData("Case7.txt")]
+        [InlineData("Case8.txt")]
         public void CheckURL(string file)
         {
             var (given, expected) = Cases[file];
@@ -69,6 +71,7 @@ namespace CurlHttpParserTests
         [InlineData("Case3.txt")]
         [InlineData("Case4.txt")]
         [InlineData("Case7.txt")]
+        [InlineData("Case8.txt")]
         private void CheckHeaders(string file)
         {
             var (given, expected) = Cases[file];

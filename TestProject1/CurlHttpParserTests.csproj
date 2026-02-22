@@ -12,14 +12,28 @@
     <None Remove="Cases\Case3.txt" />
     <None Remove="Cases\Case4.txt" />
     <None Remove="Cases\Case7.txt" />
+    <None Remove="Cases\Case8.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Cases\Case1.txt" />
-    <EmbeddedResource Include="Cases\Case2.txt" />
-    <EmbeddedResource Include="Cases\Case3.txt" />
-    <EmbeddedResource Include="Cases\Case4.txt" />
-    <EmbeddedResource Include="Cases\Case7.txt" />
+    <EmbeddedResource Include="Cases\Case1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cases\Case2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cases\Case3.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cases\Case4.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cases\Case7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cases\Case8.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
