@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -21,17 +20,9 @@ namespace CurlHttpParser
             var hdrs = details.Headers.ToArray();
             foreach(var hd in hdrs) {
                 if (hd.GetType() != typeof(string)) continue;
-                string hdr = (string)hd;
-                if (hdr == "") { continue; }
-                var res = hdr.Split(':');
-                string section = res[0].Trim();
-                switch (section.ToLower()) {
-                    case "authorization":
-                        request.Headers.TryAddWithoutValidation("Authorization", res[1].Trim());
-                        break;
-                    case "content-type":
-                        contentType = res[1].Trim(); 
-                        break; 
+                foreach (var kvp in hd)
+                {
+                    request.Headers.Add(kvp.Key, kvp.Value);
                 }
             }
             foreach (var content in details.Data) {
@@ -66,12 +57,15 @@ namespace CurlHttpParser
                 };
                 string key = item.Substring(0, delimiter).Trim(new char[] { '-'});
                 string value = item.Substring(delimiter).Trim().Trim(new char[] { '\'', '"'});
+                var pair = new KeyValuePair<string, string>();
+                var headerDict = new Dictionary<string, string>();
+                    //value.Split(":").First().Trim(), value.Split(":").LastOrDefault()?.Trim()); 
                 switch (key.ToLower()) {
                     case "compressed":
                         break;
                     case "header":
                     case "h":
-                        p.Headers.Add(value); matchd = true;
+                       headerDict.Add(pair.Key, pair.Value); matchd = true;
                         break;
                     case "data":
                     case "d":
